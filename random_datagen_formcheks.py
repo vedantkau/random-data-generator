@@ -47,4 +47,10 @@ def validate_forms(columns_details, no_of_rows):
             validate_result, msg = validate_exp(cols[3]["expression"])
             if not validate_result:
                 return False, f"{msg} for column '{cols[0]}'"
+        if cols[2] == "list":
+            list_elements = cols[3]["list"].split(",")
+            if len(list_elements)>20:
+                return False, f"Max 20 elements can be added in list for column '{cols[0]}'"
+            if len(max(list_elements, key=len))>30:
+                return False, f"Max length for a list element must be less than 30 for column '{cols[0]}'"
     return True, ""

@@ -9,6 +9,7 @@ digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
 
 def exp_parser(exp):
+    exp=exp.strip()
     random_chars_list = []
     esc_flag = False
     exp_end_flag = False
@@ -102,6 +103,7 @@ def random_word_gen(random_chars_list, no_of_rows=5):
 # exp3 = "    ABC "
 # print(exp_parser(exp3))
 # print(random_word_gen(exp_parser(exp3), 5))
+# print(exp_parser(" (._:2,3)"))
 
 
 def random_digits_gen(random_digits_range, random_gen_mode="list", random_gen_type="integer", no_of_rows=5):
