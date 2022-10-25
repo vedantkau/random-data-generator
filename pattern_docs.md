@@ -33,7 +33,7 @@
   - [] - Everything inside these braces is considered as a list similar to above list pattern type.
   - :a,b - This will define the length of word to be generated. If a=1, b=3 then length of word will be between 1 and 3.
   - :a - This will define the length of word to be generated is a. If a=1 then length of word will be 1.
-  - The characters - `:, (, ), [, ], \`  must be escaped using (\) character.
+  - The characters - `:, (, ), [, ], {, }, \, ", '`  must be escaped using (\) character.
 
   Special tokens:
   - \ul: Select random letter from A-B.
