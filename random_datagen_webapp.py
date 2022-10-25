@@ -142,10 +142,5 @@ with data_tab:
 
 
 with docs_tab:
-<<<<<<< HEAD
     with open("./pattern_docs.md", "r") as docs_file:
         st.markdown(docs_file.read())
-=======
-    with open("pattern_docs.md", "r") as docs_file:
-        st.markdown(docs_file.read())
->>>>>>> 21daf5e63f4bda97425fe72ecabd359527c078a8
