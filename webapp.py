@@ -1,11 +1,8 @@
-from logging import exception
-from operator import index
 import streamlit as st
-
 import datetime
-
-from random_datagen_functions import generate_data
-from random_datagen_formcheks import validate_forms
+from datagen_functions import generate_data
+from form_cheks import validate_forms
+import config
 
 # initial setup
 randomness_types = {
@@ -16,7 +13,7 @@ randomness_types = {
     'bool': ['list']
 }
 st.set_page_config(
-    page_title="Data Generator",
+    page_title="Random DataGen",
     page_icon="",
     layout="wide",
 )
@@ -39,10 +36,10 @@ data_tab, setup_tab, docs_tab = st.tabs(["Data", "Setup", "Pattern documentation
 
 
 with setup_tab:
-    st.write("**No of rows required (max 250):**")
+    st.write(f"**No of rows required (max {config.MAX_ROWS}):**")
     st.number_input("a", value=5, key="no_of_rows", label_visibility="collapsed")
     st.write("")
-    st.write("**Configure the columns (max 15):**")
+    st.write(f"**Configure the columns (max {config.MAX_COLUMNS}):**")
     col1, col2, col3 = st.columns([1,1,5], gap="small")
     add_btn = col1.button("Add column")
     remove_btn = col2.button("Remove columns")
