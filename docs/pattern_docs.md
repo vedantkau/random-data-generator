@@ -20,7 +20,7 @@
 
   For bool datatype, if no. of elements defined are more than 2 then only first 2 elements will be taken to generate data. Max 20 elements can be added in a list and length of each list element must be less than 30.
 
-- __calculated__
+- __calculated:__
   Available for decimal and integer datatype.
 
   Data will be generated as per the expression defined for calculation. Supported operations are +, -, /, *, **(exponent), %(division remainder), //(integer division) with boolean operations like and, or, &(and), |(or).

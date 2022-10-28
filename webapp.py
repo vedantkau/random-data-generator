@@ -1,8 +1,8 @@
 import streamlit as st
 import datetime
-from datagen_functions import generate_data
-from form_cheks import validate_forms
-import config
+from libs.datagen_functions import generate_data
+from libs.form_checks import validate_forms
+import libs.config as config
 
 # initial setup
 randomness_types = {
@@ -32,14 +32,15 @@ def convert_df(df, df_type):
         return df.to_json(orient="records").encode('utf-8')
 
 st.markdown("# Random data generator")
-data_tab, setup_tab, docs_tab = st.tabs(["Data", "Setup", "Pattern documentation"])
+data_tab, setup_tab, docs_tab, about_tab = st.tabs(["Data", "Setup", "Pattern documentation", "About"])
 
 
 with setup_tab:
-    st.write(f"**No of rows required (max {config.MAX_ROWS}):**")
+    
+    st.write(f"**No of rows required (max {config.MAX_ROWS}):**" if config.MAX_ROWS_LIMIT else "**No of rows required:**")
     st.number_input("a", value=5, key="no_of_rows", label_visibility="collapsed")
     st.write("")
-    st.write(f"**Configure the columns (max {config.MAX_COLUMNS}):**")
+    st.write(f"**Configure the columns (max {config.MAX_COLUMNS}):**" if config.MAX_COLUMNS_LIMIT else "**Configure the columns:**")
     col1, col2, col3 = st.columns([1,1,5], gap="small")
     add_btn = col1.button("Add column")
     remove_btn = col2.button("Remove columns")
@@ -139,5 +140,11 @@ with data_tab:
 
 
 with docs_tab:
-    with open("./pattern_docs.md", "r") as docs_file:
+    with open("./docs/pattern_docs.md", "r") as docs_file:
         st.markdown(docs_file.read())
+
+with about_tab:
+    with open("./docs/about.md", "r") as about_file:
+        st.markdown("#### Random data generator")
+        st.caption("Version 1.1")
+        st.markdown(about_file.read())

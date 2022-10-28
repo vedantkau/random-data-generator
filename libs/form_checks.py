@@ -1,5 +1,5 @@
 import re
-import config
+import libs.config as config
 
 def validate_exp(exp, column_names, current_col):
     check0 = True if exp.count(" ") != len(exp) else False
@@ -23,7 +23,7 @@ def validate_exp(exp, column_names, current_col):
     check3 = re.findall(r"(?<!\\)\[.*(?<!\\)\]", exp)
     for lists in check3:
         largest_len += len(max(lists[1:-1].split(","), key=len))
-    check3_pass = True if largest_len <= 30 and config.STRING_LENGTH_LIMIT else False
+    check3_pass = True if largest_len <= 30 or not config.STRING_LENGTH_LIMIT else False
 
     if not check3_pass:
         return False, "Word length is too long for random characters (max 30 characters)"
@@ -70,9 +70,9 @@ def validate_exp(exp, column_names, current_col):
 
 def validate_forms(columns_details, no_of_rows):
     column_names = [cols[0] for cols in columns_details.values()]
-    if no_of_rows > config.MAX_ROWS:
+    if no_of_rows > config.MAX_ROWS and config.MAX_ROWS_LIMIT:
         return False, f"Rows limit exceeded (Max {config.MAX_ROWS} rows can be added)"
-    if len(columns_details.keys())> config.MAX_COLUMNS:
+    if len(columns_details.keys()) > config.MAX_COLUMNS and config.MAX_COLUMNS_LIMIT:
         return False, f"Columns limit exceeded (Max {config.MAX_COLUMNS} columns can be added)"
     for cols in columns_details.values():
         if len(cols[0]) != len(re.findall(r"[\w+_*\s*]", cols[0])):
