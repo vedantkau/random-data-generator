@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Webapp docker build
 
 on:
   push:
@@ -15,5 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file docker/Dockerfile --tag vedantkau/random-datagen-webapp:$(date +%Y_%m_%d)
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+      run: |
+        docker login -u $DOCKER_USERNAME -p $DOCKER_PASS
+        docker build . --file docker/Dockerfile --tag vedantkau/random-datagen-webapp:$(date +%Y_%m_%d)
+        docker push vedantkau/random-datagen-webapp:$(date +%Y_%m_%d)
+        docker logout
+        echo Done!!
       
