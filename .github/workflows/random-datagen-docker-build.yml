@@ -19,9 +19,9 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
       run: |
-        docker login --username $DOCKER_USERNAME --password-stdin $DOCKER_PASS
-        docker build . --file docker/Dockerfile --tag vedantkau/random-datagen-webapp:$(date +%Y_%m_%d)
-        docker push vedantkau/random-datagen-webapp:$(date +%Y_%m_%d)
+        docker login --username $DOCKER_USERNAME --u $DOCKER_PASS
+        docker build . --file docker/Dockerfile --tag vedantkau/random-datagen-webapp:no_limits
+        docker push vedantkau/random-datagen-webapp:no_limits
         docker logout
         echo Done!!
       
