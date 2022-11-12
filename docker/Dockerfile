@@ -12,4 +12,4 @@ COPY ["./docker/config.py", "./libs/datagen_functions.py", "./libs/form_checks.p
 COPY ["./docs/pattern_docs.md", "./docs/about.md", "/random-datagen/docs/"]
 copy ["webapp.py", "/random-datagen/"]
 
-CMD ["streamlit", "run", "webapp.py"]
+CMD ["streamlit", "run", "webapp.py", "&"]
