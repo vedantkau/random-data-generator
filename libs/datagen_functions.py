@@ -24,6 +24,7 @@ def exp_parser(exp):
     inside_exp_range = False
     inside_exp_range_start = 0
     inside_exp_range_end = 0
+    outside_exp = False
     outside_exp_start = 0
     outside_exp_end = 0
     i = -1
@@ -31,21 +32,31 @@ def exp_parser(exp):
     while i < len(exp)-1:
         i += 1
 
-        if exp[i] == "[" and esc_flag == False:
+        if exp[i] == "[" and esc_flag == False and not (inside_list and inside_exp and inside_col_braces):
             inside_list = True
-            inside_list_start = i + 1
+            random_chars_list.append([""])
             continue
-        if exp[i] == "]" and inside_list == True:
+        if exp[i] == "]" and inside_list == True and esc_flag == False:
             inside_list = False
-            inside_list_end = i
-            random_chars_list.append(exp[inside_list_start:inside_list_end].split(","))
+            random_chars_list[-1] = random_chars_list[-1][0].split("__,__")
             continue
-        
-        if exp[i] == "{" and esc_flag == False:
+        if exp[i] == "\\" and inside_list == True and esc_flag == False:
+            esc_flag = True
+            continue
+        if inside_list == True:
+            if exp[i] == "," and esc_flag == False:
+                random_chars_list[-1][0] += "__,__"
+                continue
+            esc_flag = False
+            random_chars_list[-1][0] += exp[i]
+            continue
+
+
+        if exp[i] == "{" and esc_flag == False and not (inside_list and inside_exp and inside_col_braces):
             inside_col_braces = True
             inside_col_braces_start = i + 1
             continue
-        if exp[i] == "}" and inside_col_braces == True:
+        if exp[i] == "}" and inside_col_braces == True and exp[i-1] != "\\":
             inside_col_braces = False
             inside_col_braces_end = i
             random_chars_list.append([exp[inside_col_braces_start:inside_col_braces_end], ["col_exp"]]) 
@@ -54,11 +65,11 @@ def exp_parser(exp):
         if inside_col_braces or inside_list:
             continue
 
-        if exp[i] == "(" and esc_flag == False:
+        if exp[i] == "(" and esc_flag == False and not (inside_list and inside_exp and inside_col_braces):
             inside_exp = True
             random_chars_list.append([])
             continue
-        if exp[i] == ":" and inside_exp == True and esc_flag == False:
+        if exp[i] == ":" and esc_flag == False and inside_exp == True:
             inside_exp_range = True
             inside_exp_range_start = i + 1
             continue
@@ -96,12 +107,21 @@ def exp_parser(exp):
                 return []
             random_chars_list[-1].append(exp[i])
             continue
-        
-        if i == 0 or exp[i-1] in ")}]":
-            outside_exp_start = i
-        if i == len(exp)-1 or exp[i+1] in "({[":
-            outside_exp_end = i + 1
-            random_chars_list.append([exp[outside_exp_start:outside_exp_end]])
+
+        if i == 0 or (exp[i-1] in ")}]" and not (inside_col_braces and inside_exp and inside_list)):
+            outside_exp = True
+            random_chars_list.append([exp[i]])
+            continue
+        if (exp[i] in "({[" and esc_flag == False and outside_exp == True):
+            outside_exp = False
+            continue
+        if exp[i] == "\\" and outside_exp == True and esc_flag == False:
+            esc_flag = True
+            continue
+        if outside_exp == True:
+            esc_flag = False
+            random_chars_list[-1][-1] += exp[i]
+            continue
 
     if esc_flag or inside_list or inside_col_braces or inside_exp or inside_exp_range:
         return []
@@ -113,6 +133,10 @@ def exp_parser(exp):
 # print(exp_parser("[Abc,Xyz,Pqr](\':1)[C,Z,Q]"))
 # print(exp_parser("(\\ul:2,3)(-)(\\d:3)"))
 # print(exp_parser(" (._:2,3)"))
+# print(exp_parser("abc\\("))
+# print(exp_parser("{acd{abc}d}"))
+# print(exp_parser("[abc,xyz\\{}]{col1}"))
+# print(exp_parser("[abc,xyz\\{}\\,pqrs,lmn]"))
 
 
 def random_word_gen(random_chars_list, no_of_rows=5):
