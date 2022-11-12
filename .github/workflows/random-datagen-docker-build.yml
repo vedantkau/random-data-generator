@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: |
-        echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USERNAME }}
         docker build . --file docker/Dockerfile --tag vedantkau/random-datagen-webapp:no_limits
         docker push vedantkau/random-datagen-webapp:no_limits
         docker logout
