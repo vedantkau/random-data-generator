@@ -231,7 +231,7 @@ def random_dates_gen(random_dates_range, random_gen_mode="list", no_of_rows=5):
                 select_date = datetime.date(2022, 1, 1)
             random_dates_list.append(select_date)
    
-    return pd.Series(random_dates_list)
+    return pd.Series(random_dates_list).dt.strftime('%Y-%m-%d')
 
 # Test for random dates
 # print(random_dates_gen(['2022-01-01', '2022-01-31'], "min_max", 5))
