@@ -6,4 +6,4 @@ We require a testing data when we are working on data pipeline or develop new ap
 In web version, there are limitations on size of data to be generated. To use this tool with no limits, pull the docker version from dockerhub,
 `docker pull vedantkau/random-datagen-webapp:no_limits`
 
-Checkout the webapp at [Random data generator](https://random-data-generator.streamlitapp.com/). Thanks to streamlit framework and community cloud that helped this development!
+Checkout the webapp at [Random data generator](https://random-datagen.streamlit.app). Thanks to streamlit framework and community cloud that helped this development!
