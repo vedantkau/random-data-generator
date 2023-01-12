@@ -181,32 +181,37 @@ def random_word_gen(random_chars_list, no_of_rows=5, constraint_type = "no const
                 part_gen_list = random.sample(lists, k=min(len(lists), no_of_rows))
             else:
                 for _ in range(no_of_rows):
-                    part_gen_list.append(random.choice(lists))
-        
+                    part_gen_list.append(random.choice(lists))   
         random_words_list.append(part_gen_list)
 
     if constraint_type == "unique" and len(random_words_list) > 1:
         continue_flag = False
-        indices_to_delete = []
+        random_words_unique = []
         for i in range(len(random_words_list)):
-            if continue_flag:
-                continue_flag = False
-                continue
             if isinstance(random_words_list[i], list) and len(random_words_list[i]) < no_of_rows:
-                if (i != 0 and isinstance(random_words_list[i-1], list)):
-                    random_words_list[i] = list(itertools.product(random_words_list[i-1], random_words_list[i]))[:no_of_rows]
-                    for j in range(len(random_words_list[i])):
-                        random_words_list[i][j] = "".join(random_words_list[i][j])
-                    indices_to_delete.append(i-1)
+                if continue_flag:
+                    continue_flag = False
+                    continue
+                if (i != 0 and isinstance(random_words_unique[-1], list)):
+                    random_words_product = list(itertools.product(random_words_unique[-1], random_words_list[i]))[:no_of_rows]
+                    for j in range(len(random_words_product)):
+                        random_words_product[j] = "".join(random_words_product[j])
+                    random_words_unique[-1] = random_words_product
                 elif (i != len(random_words_list)-1 and isinstance(random_words_list[i+1], list)):
-                    random_words_list[i] = list(itertools.product(random_words_list[i], random_words_list[i+1]))[:no_of_rows]
-                    for j in range(len(random_words_list[i])):
-                        random_words_list[i][j] = "".join(random_words_list[i][j])
-                    indices_to_delete.append(i+1)
+                    random_words_product = list(itertools.product(random_words_list[i], random_words_list[i+1]))[:no_of_rows]
+                    for j in range(len(random_words_product)):
+                        random_words_product[j] = "".join(random_words_product[j])
+                    random_words_unique.append(random_words_product)
                     continue_flag = True
-        indices_to_delete = indices_to_delete[::-1]
-        for i in indices_to_delete:
-            random_words_list.pop(i)
+                else:
+                    random_words_product = random_words_list[i][:]
+                    sample_size = len(random_words_product)
+                    while len(random_words_product) < no_of_rows:
+                        random_words_product.extend(random.sample(random_words_list[i], k=sample_size))
+                    random_words_unique.append(random_words_product[:no_of_rows])
+            else:
+                random_words_unique.append(random_words_list[i])
+        random_words_list = random_words_unique
 
     return random_words_list
            

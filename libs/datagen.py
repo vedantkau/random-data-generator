@@ -82,7 +82,10 @@ def generate_data(column_details, no_of_rows=5, cols_render_order=None):
             pd_series = pd.Series(data[0]) if isinstance(data[0], list) else pd_data.get(data[0], pd.Series('', index=range(no_of_rows),  dtype="str"))
             for d in data[1:]:
                 pd_series = pd_series.combine(pd.Series(d) if isinstance(d, list) else pd_data.get(d, pd.Series('', index=range(no_of_rows),  dtype="str")), lambda str1,str2: str(str1)+str(str2), fill_value="")
-            pd_data[cols[0]] = pd_series
+            if cols[4]["type"] == "unique":
+                pd_data[cols[0]] = pd_series.drop_duplicates()
+            else:
+                pd_data[cols[0]] = pd_series
 
     pd_df = pd.DataFrame(pd_data)
     return pd_df
