@@ -62,8 +62,8 @@ def convert_df(df, df_type):
     if df_type == "json":
         return df.to_json(orient="records").encode('utf-8')
 
-st.markdown("# Random data generator")
-data_tab, setup_tab, docs_tab, about_tab = st.tabs(["Data", "Setup", "Pattern documentation", "About"])
+st.header("Random data generator")
+data_tab, setup_tab, docs_tab = st.tabs(["Data", "Setup", "Docs"])
 
 
 with setup_tab:
@@ -186,11 +186,16 @@ with data_tab:
 
 
 with docs_tab:
-    with open("./docs/pattern_docs.md", "r") as docs_file:
-        st.markdown(docs_file.read())
+    st.markdown("#### Random data generator")
+    st.caption("Version 2.0")
+    index, content = st.columns([1, 5], gap="small")
+    st.markdown("")
+    index.markdown("[About](#random-data-generator)")
+    index.markdown("[Getting started](#getting-started)")
+    index.markdown("[Limitations](#limitations)")
+    index.markdown("[View source](#view-source)")
+    index.markdown("[Pattern documentation](#pattern-documentation)")
+    index.markdown("[Data constraints](#data-constraints)")
 
-with about_tab:
-    with open("./docs/about.md", "r") as about_file:
-        st.markdown("#### Random data generator")
-        st.caption("Version 2.0")
-        st.markdown(about_file.read())
+    with open("./docs/docs.md", "r") as about_file:
+        content.markdown(about_file.read())
