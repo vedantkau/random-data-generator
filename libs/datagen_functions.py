@@ -163,11 +163,14 @@ def random_word_gen(random_chars_list, no_of_rows=5, constraint_type = "no const
 
         if len(lists)>=1 and isinstance(lists[-1], list):
             choice_chars = lists[:-1]
+            random.shuffle(choice_chars)
             if constraint_type == "unique":
                 len_of_word = [int(lists[-1][0]), int(lists[-1][1])+1] if len(lists[-1]) == 2 else [int(lists[-1][0]), int(lists[-1][0])+1]
                 word_permutations = []
+                word_permutations_loopcount = len_of_word[1] - len_of_word[0]
                 for i in range(*len_of_word):
-                    word_permutations.extend(list(itertools.product(choice_chars, repeat=i)))
+                    current_word_permutations = list(itertools.islice(itertools.product(choice_chars, repeat=i), 0, no_of_rows//word_permutations_loopcount+1))
+                    word_permutations.extend(current_word_permutations)
                 part_gen_list = random.sample(word_permutations, k=min(len(word_permutations), no_of_rows))
                 for i in range(len(part_gen_list)):
                     part_gen_list[i] = "".join(part_gen_list[i])
@@ -193,12 +196,12 @@ def random_word_gen(random_chars_list, no_of_rows=5, constraint_type = "no const
                     continue_flag = False
                     continue
                 if (i != 0 and isinstance(random_words_unique[-1], list)):
-                    random_words_product = list(itertools.product(random_words_unique[-1], random_words_list[i]))[:no_of_rows]
+                    random_words_product = list(itertools.islice(itertools.product(random_words_unique[-1], random_words_list[i]), no_of_rows))
                     for j in range(len(random_words_product)):
                         random_words_product[j] = "".join(random_words_product[j])
                     random_words_unique[-1] = random_words_product
                 elif (i != len(random_words_list)-1 and isinstance(random_words_list[i+1], list)):
-                    random_words_product = list(itertools.product(random_words_list[i], random_words_list[i+1]))[:no_of_rows]
+                    random_words_product = list(itertools.islice(itertools.product(random_words_list[i], random_words_list[i+1]), no_of_rows))
                     for j in range(len(random_words_product)):
                         random_words_product[j] = "".join(random_words_product[j])
                     random_words_unique.append(random_words_product)
