@@ -26,6 +26,23 @@ def list_search(ll, ul, digits_range):
     return digits_range[ll_index:ul_index]
 
 
+def sample_iterproduct(product_generator, sample_size, product_size):
+    if sample_size == product_size:
+        return list(product_generator)
+    
+    sample_list = sorted(random.sample(range(product_size), k=sample_size))
+    sample_list_size = len(sample_list)
+    j=0
+    random_eles = []
+    for i, ele in enumerate(product_generator):
+        if i == sample_list[j]:
+            random_eles.append(ele)
+            j += 1
+        if j == sample_list_size:
+            break
+    return random_eles
+
+
 def exp_parser(exp):
     exp=exp.strip()
 
@@ -169,7 +186,12 @@ def random_word_gen(random_chars_list, no_of_rows=5, constraint_type = "no const
                 word_permutations = []
                 word_permutations_loopcount = len_of_word[1] - len_of_word[0]
                 for i in range(*len_of_word):
-                    current_word_permutations = list(itertools.islice(itertools.product(choice_chars, repeat=i), 0, no_of_rows//word_permutations_loopcount+1))
+                    current_word_permutations = itertools.product(choice_chars, repeat=i)
+                    product_size = len(choice_chars)**i
+                    if product_size > 1000:
+                        product_size = 1000
+                        current_word_permutations = itertools.islice(current_word_permutations, 1000)
+                    current_word_permutations = sample_iterproduct(current_word_permutations, min(no_of_rows//word_permutations_loopcount+1, product_size), product_size)
                     word_permutations.extend(current_word_permutations)
                 part_gen_list = random.sample(word_permutations, k=min(len(word_permutations), no_of_rows))
                 for i in range(len(part_gen_list)):
