@@ -27,19 +27,18 @@ def list_search(ll, ul, digits_range):
 
 
 def sample_iterproduct(product_generator, sample_size, product_size):
-    if sample_size == product_size:
+    if sample_size >= product_size:
         return list(product_generator)
     
+    product_size = min(9999999, product_size)
     sample_list = sorted(random.sample(range(product_size), k=sample_size))
-    sample_list_size = len(sample_list)
-    j=0
-    random_eles = []
-    for i, ele in enumerate(product_generator):
-        if i == sample_list[j]:
-            random_eles.append(ele)
-            j += 1
-        if j == sample_list_size:
-            break
+    sample_list = [-1] + sample_list
+    product_slices = []
+    for i in range(1, sample_size+1):
+        slice_index = sample_list[i]-sample_list[i-1]-1
+        product_slices.append(itertools.islice(product_generator, slice_index, slice_index+1))
+        
+    random_eles = list(itertools.chain(*product_slices))
     return random_eles
 
 
@@ -188,10 +187,10 @@ def random_word_gen(random_chars_list, no_of_rows=5, constraint_type = "no const
                 for i in range(*len_of_word):
                     current_word_permutations = itertools.product(choice_chars, repeat=i)
                     product_size = len(choice_chars)**i
-                    if product_size > 1000:
-                        product_size = 1000
-                        current_word_permutations = itertools.islice(current_word_permutations, 1000)
-                    current_word_permutations = sample_iterproduct(current_word_permutations, min(no_of_rows//word_permutations_loopcount+1, product_size), product_size)
+                    if product_size > 9999999 and no_of_rows < 5000:
+                        current_word_permutations = [random.choices(choice_chars, k=i) for _ in range(no_of_rows//word_permutations_loopcount+1)]
+                    else:
+                        current_word_permutations = sample_iterproduct(current_word_permutations, min(no_of_rows//word_permutations_loopcount+1, product_size), product_size)
                     word_permutations.extend(current_word_permutations)
                 part_gen_list = random.sample(word_permutations, k=min(len(word_permutations), no_of_rows))
                 for i in range(len(part_gen_list)):
@@ -202,6 +201,7 @@ def random_word_gen(random_chars_list, no_of_rows=5, constraint_type = "no const
                     part_gen_list.append("".join(random.choices(choice_chars, k=random.randint(*len_of_word))))
        
         if len(lists)>=1 and not isinstance(lists[-1], list):
+            lists = list(map(lambda s: s.strip(), lists))
             if constraint_type == "unique":
                 part_gen_list = random.sample(lists, k=min(len(lists), no_of_rows))
             else:
